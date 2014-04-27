@@ -1,0 +1,42 @@
+<script src="class.js"></script>
+<script>
+    Class.enhance = true;
+    var Root = Class.create({
+        a : function() {
+            console.log('root a')
+        },
+        b : function() {
+            console.log('root b')
+        }
+    });
+    var root1 = Root.init();
+    var root = Root.init();
+    var SubRoot = Root.create({
+        init : function(obj) {
+            if (obj) {
+                for(var k in obj){
+                    this[k] = obj[k];
+                }
+            }
+        },
+        a : {
+            handler: function() {
+                console.log('subRoot a')
+            },
+            override: true
+        },
+        c : function() {
+            console.log('subRoot c')
+        }
+    });
+    var subRoot = SubRoot.init({a1:12,b1:{c1:23}});
+    subRoot.a();
+    subRoot.b();
+    subRoot.c();
+   var subRoot = SubRoot.init({a1:12,b1:{c1:23}});
+   
+   root.dispose();
+   console.log(root1, root);
+   console.log(Root.all());
+   console.log(SubRoot.all());
+</script>
