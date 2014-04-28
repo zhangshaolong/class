@@ -54,9 +54,66 @@ var Class = function () {
     var init = function (options) { // 暂时只支持1个参数
         return new this(options);
     };
+    /**
+     * 事件监听机制实现类，可使用on绑定事件
+     * @return {object} 返回事件对象
+     *               {object.on} 绑定事件接口（name，callback，context）
+     *               {object.off} 注销事件接口（name，callback）
+     *               {object.trigger} 触发事件接口（name）
+     */
+    var Events = (function () {
+        var slice = Array.prototype.slice;
+        var Events = {
+            on: function (name, callback, context) {
+                if (!name || !callback) return false;
+                this.events || (this.events = {});
+                var evts = this.events[name] || (this.events[name] = []);
+                var details = {callback: callback, context: context || this};
+                evts.unshift(details);
+                return details;
+            },
+            off: function (name, callback) {
+                var type = typeof name;
+                if(type === 'string'){
+                    var evts = this.events[name],
+                        len = evts.length;
+                    var callType = typeof callback;
+                    if ('undefined' === callType) {
+                        this.events[name] = [];
+                    } else if ('function' === callType) {
+                        while(len--){
+                            if(callback === evts[len].callback){
+                                evts.splice(len, 1);
+                            }
+                        }
+                    } else {
+                        while (len--) {
+                            if (callback === evts[len]) {
+                                evts.splice(len, 1);
+                            }
+                        }
+                    }
+                }
+                if (type === 'undefined') {
+                    this.events = {};
+                }
+            },
+            trigger: function (name) {
+                var evts = this.events[name],
+                    len = evts.length;
+                var args = slice.call(arguments, 1);
+                while (len--) {
+                    var evt = evts[len];
+                    evt.callback.apply(evt.context, args);
+                }
+            }
+        };
+        return Events;
+    })();
     var Root;
     return Root = {
         enhance: false, // 是否是加强模式
+        eventable: false,
         /**
          * @param {methods}，{key} method名字，{value} method 或者 {object}
          * {methods}.{value}为{object}时，{object}结构
@@ -122,11 +179,18 @@ var Class = function () {
                 F.prototype.superClass = parent;
                 F.prototype.constructor = F;
             }
-            if (Class.enhance) {
+            if (this.enhance) {
                 F.prototype.dispose = dispose;
+            }
+            if (this.eventable) {
+                F.prototype.on = Events.on;
+                F.prototype.off = Events.off;
+                F.prototype.trigger = Events.trigger;
             }
             F.create = Root.create;
             F.init = init;
+            F.enhance = this.enhance;
+            F.eventable = this.eventable;
             if (Root.enhance) {
                 F.uuid = uuid();
                 F.instances = {};

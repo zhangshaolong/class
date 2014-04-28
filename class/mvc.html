@@ -1,56 +1,57 @@
 <script src="class.js"></script>
 <script>
     //Class.enhance = true;
-	var Action = Class.create({
-		entry: function(){
-			console.log('entry');
-		},
-		beforerender: function () {
-			console.log('beforerender');
-		},
-		afterrender: function() {
-			console.log('afterrender');
-		}
-	});
-	var AAction = Action.create({
-		entry: function() {
-			console.log('aciton do a`s business on entry');
-		},
-		beforerender: function () {
-			console.log('aciton do a`s business on beforerender');
-		},
-		afterrender: function() {
-			console.log('aciton do a`s business on afterrender');
-		}
-	});
-	var BAction = Action.create({
-		entry: function() {
-			console.log('aciton do b`s business');
-		}
-	});
-    var Controller = Class.create({
-		doPath: function(path) {
-			console.log('request path: ' + path);
-			var action = this.routers[path].init();
-			setTimeout(function() {
-				action.entry();
-			}, 1000);
-			setTimeout(function() {
-				action.beforerender();
-			}, 2000);
-			setTimeout(function() {
-				action.afterrender();
-			}, 3000);
-		}
+    //Class.eventable = true
+    var Action = Class.create({
+        entry: function(){
+            console.log('entry');
+        },
+        beforerender: function () {
+            console.log('beforerender');
+        },
+        afterrender: function() {
+            console.log('afterrender');
+        }
     });
-	var control = Controller.init({
-		routers: {
-			a: AAction,
-			b: BAction
-		}
-	});
-	setTimeout(function() {
-		control.doPath('b');
-	}, 4000);
-	control.doPath('a');
+    var AAction = Action.create({
+        entry: function() {
+            console.log('aciton do a`s business on entry');
+        },
+        beforerender: function () {
+            console.log('aciton do a`s business on beforerender');
+        },
+        afterrender: function() {
+            console.log('aciton do a`s business on afterrender');
+        }
+    });
+    var BAction = Action.create({
+        entry: function() {
+            console.log('aciton do b`s business');
+        }
+    });
+    var Controller = Class.create({
+        doPath: function(path) {
+            console.log('request path: ' + path);
+            var action = this.routers[path].init();
+            setTimeout(function() {
+                action.entry();
+            }, 1000);
+            setTimeout(function() {
+                action.beforerender();
+            }, 2000);
+            setTimeout(function() {
+                action.afterrender();
+            }, 3000);
+        }
+    });
+    var control = Controller.init({
+        routers: {
+            a: AAction,
+            b: BAction
+        }
+    });
+    setTimeout(function() {
+        control.doPath('b');
+    }, 4000);
+    control.doPath('a');
 </script>
