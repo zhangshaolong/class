@@ -1,0 +1,35 @@
+<script src="class.js"></script>
+<script>
+var Car = Class.create({
+	run: function (arg) {this.name = arg; console.log('car run' + arg)}
+});
+var Person = Class.create({
+	getName: function () {console.log('hhe')}
+});
+var scar = Car.init();
+
+console.log(scar instanceof Car);
+console.log(scar instanceof Person);
+var SubCar = Car.create({
+	run: {
+		override: true,
+		handler: function () {
+			console.log(1);
+			this.getSuper('run')(12);
+			console.log(3);
+			this.getSuper('run')(3312);
+		}
+	},
+	didi: function () {console.log('did')}
+});
+var subCar = SubCar.init();
+
+var SubCar2 = Car.create();
+var subCar2 = SubCar2.init();
+subCar2.run();
+console.log(subCar instanceof SubCar);
+console.log(subCar instanceof Car);
+console.log(subCar instanceof Person);
+subCar.run();
+subCar.didi();
+</script>

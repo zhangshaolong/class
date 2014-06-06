@@ -37,6 +37,15 @@ var Class = function () {
         this.superClass = null;
     };
     /**
+     * 获取父类的方法
+     */
+    var getSuper = function (method) {
+        var me = this;
+        return function () {
+            me.superClass.prototype[method].apply(me, arguments);
+        };
+    }
+    /**
      * 唯一标识产生器
      * @return {number} 返回唯一标识
      */
@@ -142,7 +151,7 @@ var Class = function () {
             }
             methods = methods || {};
             var F = function () {
-                this.init && this.init.apply(this, arguments);
+                this.init.apply(this, arguments);
                 if (Root.enhance) {
                     F.instances[this._uuid = F.uuid()] = this;
                 }
@@ -166,10 +175,10 @@ var Class = function () {
                         override = method.override;
                         method = method.handler;
                     }
-                    F.prototype[name] = function(method, parentMethod, override) {
+                    F.prototype[name] = function(method, pMethod, override) {
                         return function() {
-                            !override && parentMethod
-                                && parentMethod.apply(this, arguments);
+                            !override && pMethod
+                                && pMethod.apply(this, arguments);
                             return method.apply(this, arguments);
                         };
                     }(method, parent && parent.prototype[name], override);
@@ -178,6 +187,7 @@ var Class = function () {
             if (parent) {
                 F.prototype.superClass = parent;
                 F.prototype.constructor = F;
+                F.prototype.getSuper = getSuper;
             }
             if (this.enhance) {
                 F.prototype.dispose = dispose;

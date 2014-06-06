@@ -13,7 +13,7 @@
             console.log('afterrender');
         }
     });
-    var AAction = Action.create({
+    var FormAction = Action.create({
         entry: function() {
             console.log('aciton do a`s business on entry');
         },
@@ -46,7 +46,7 @@
     });
     var control = Controller.init({
         routers: {
-            a: AAction,
+            a: FormAction,
             b: BAction
         }
     });
