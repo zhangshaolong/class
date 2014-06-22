@@ -7,7 +7,6 @@ var Person = Class.create({
 	getName: function () {console.log('hhe')}
 });
 var scar = Car.init();
-
 console.log(scar instanceof Car);
 console.log(scar instanceof Person);
 var SubCar = Car.create({
@@ -23,7 +22,7 @@ var SubCar = Car.create({
 	didi: function () {console.log('did')}
 });
 var subCar = SubCar.init();
-
+console.log(11, subCar instanceof Class);
 var SubCar2 = Car.create();
 var subCar2 = SubCar2.init();
 subCar2.run();

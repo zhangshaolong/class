@@ -1,6 +1,6 @@
 /**
  * @file 面向对象实现继承，子类会自动继承父类的行为
- * @author：张少龙（zhangshaolong@baidu.com）
+ * @author：张少龙（zhangshaolongjj@163.com）
  */
 var Class = function () {
     /**
@@ -67,8 +67,8 @@ var Class = function () {
      * 事件监听机制实现类，可使用on绑定事件
      * @return {object} 返回事件对象
      *               {object.on} 绑定事件接口（name，callback，context）
-     *               {object.off} 注销事件接口（name，callback）
-     *               {object.trigger} 触发事件接口（name）
+     *               {object.un} 注销事件接口（name，callback）
+     *               {object.fire} 触发事件接口（name）
      */
     var Events = (function () {
         var slice = Array.prototype.slice;
@@ -81,7 +81,7 @@ var Class = function () {
                 evts.unshift(details);
                 return details;
             },
-            off: function (name, callback) {
+            un: function (name, callback) {
                 var type = typeof name;
                 if(type === 'string'){
                     var evts = this.events[name],
@@ -107,7 +107,7 @@ var Class = function () {
                     this.events = {};
                 }
             },
-            trigger: function (name) {
+            fire: function (name) {
                 var evts = this.events[name],
                     len = evts.length;
                 var args = slice.call(arguments, 1);
@@ -119,8 +119,7 @@ var Class = function () {
         };
         return Events;
     })();
-    var Root;
-    return Root = {
+    var Root = {
         enhance: false, // 是否是加强模式
         eventable: false,
         /**
@@ -194,8 +193,8 @@ var Class = function () {
             }
             if (this.eventable) {
                 F.prototype.on = Events.on;
-                F.prototype.off = Events.off;
-                F.prototype.trigger = Events.trigger;
+                F.prototype.un = Events.un;
+                F.prototype.fire = Events.fire;
             }
             F.create = Root.create;
             F.init = init;
@@ -211,4 +210,5 @@ var Class = function () {
             return F;
         }
     };
+    return Root.create();
 }();
