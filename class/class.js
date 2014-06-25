@@ -2,7 +2,17 @@
  * @file 面向对象实现继承，子类会自动继承父类的行为
  * @author：张少龙（zhangshaolongjj@163.com）
  */
-var Class = function () {
+(function (root, factory) {
+    var clazz = factory();
+    if (typeof define === 'function') {
+        define(function() {
+            return clazz;
+        });
+    } else {
+        root.Class = clazz;
+    }
+})(this, function () {
+    'use strict'
     /**
      * 空函数，用来为子类继承方法
      */
@@ -211,4 +221,4 @@ var Class = function () {
         }
     };
     return Root.create();
-}();
+});
