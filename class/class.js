@@ -49,7 +49,7 @@
     /**
      * 获取父类的方法
      */
-    var getSuper = function (method) {
+    var callSuper = function (method) {
         var me = this;
         return function () {
             me.superClass.prototype[method].apply(me, arguments);
@@ -196,7 +196,7 @@
             if (parent) {
                 F.prototype.superClass = parent;
                 F.prototype.constructor = F;
-                F.prototype.getSuper = getSuper;
+                F.prototype.callSuper = callSuper;
             }
             if (this.enhance) {
                 F.prototype.dispose = dispose;
